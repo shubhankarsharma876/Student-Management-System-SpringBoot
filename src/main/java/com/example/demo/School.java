@@ -19,7 +19,7 @@ public class School{
 
     private String name;
 
-    public School() {
+    public School(String name) {
     }
 
     public School(Integer id, String name) {
@@ -31,6 +31,9 @@ public class School{
         Id = id;
         this.name = name;
         this.students = students;
+    }
+
+    public School() {
     }
 
     @OneToMany(

@@ -9,12 +9,21 @@ import java.util.List;
 public class StudentController {
 
 
-    private final StudentRepository studentRepository;
+    /*private final StudentRepository studentRepository;
 
+    private final StudentMapper studentMapper;*/ // Instance of the mapper to connect it with the service layer
 
-    public StudentController(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    private final StudentService studentService;
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
+
+
+ /*   public StudentController(StudentRepository studentRepository, StudentMapper studentMapper) {
+        this.studentRepository = studentRepository;
+        this.studentMapper = studentMapper;
+    }*/
 
 /*    @PostMapping("/students")
     public Student post(@RequestBody Student student){
@@ -24,14 +33,29 @@ public class StudentController {
 
     // the above bunch of code is using simple requesting which is made replaced with DTO as in the below code
 
-    @PostMapping("/students")
-    public Student post(@RequestBody StudentDto dto){
+    /*@PostMapping("/students")
+    public StudentResponseDto post(@RequestBody StudentDto dto){
         var student = toStudent(dto);
-        Student save = studentRepository.save(student);
-        return save;
+        var savedStudent = studentRepository.save(student);
+
+        return toStudentRepositoryDto(savedStudent);
+    }*/
+
+    // THE ABOVE CODE OF LINES FROM 30 TO 35 IS UPDATED TO UTILIZE THIS THROUGH THE SERVICE LAYER.
+
+    @PostMapping("/students")
+    public StudentResponseDto saveStudent(@RequestBody StudentDto dto){
+        /*var student = studentMapper.toStudent(dto); //Adding details
+        var savedStudent = studentRepository.save(student); // Saving details //THIS WILL BE SHIFTED TO StudentService.
+
+        return studentMapper.toStudentRepositoryDto(savedStudent); //Sending response*/
+
+        return this.studentService.saveStudent(dto);
     }
 
-    private Student toStudent(StudentDto dto){
+    /* SHIFTING THE BELOW TWO FUNTION TO THE SERVICE LAYER OR THE SERVICE LAYER CLASS WHICH IS BY THE NAME STUDENTMAPPER. */
+
+    /*private Student toStudent(StudentDto dto){
         var student = new Student();
         student.setFirstname(dto.firstname());
         student.setLastname(dto.lastname());
@@ -43,6 +67,14 @@ public class StudentController {
         student.setSchool(school);
         return student;
     }
+
+    private StudentResponseDto toStudentRepositoryDto(Student student){
+
+        return new StudentResponseDto(student.getFirstname(),
+                student.getLastname(),
+        student.getEmail());
+
+    }*/
     
     @GetMapping("/students")
     public List<Student> findAll(){
